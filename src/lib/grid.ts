@@ -40,7 +40,7 @@ export class Fluid {
     integrateGravity(g: number, dt: number) {
         for (let i = 1; i < this.nx - 1; i++) {
             for (let j = 1; j < this.ny - 1; j++) { // leave out buffer cells
-                if (this.solid_mask[this.idx(i, j)] !== 0 && this.solid_mask[this.idx(i, j-1)]) { // skip if cell boundary above and below is solid
+                if (this.solid_mask[this.idx(i, j)] !== 0 && this.solid_mask[this.idx(i, j-1)]) { // skip if cell b'ary above and below is solid
                     this.v[this.idx(i, j)] += g * dt; // apply gravity to vertical velocity
                 }
             }
@@ -77,6 +77,18 @@ export class Fluid {
                     }
                 }
             }
+        }
+    }
+
+    // free-slip (neumann, (u_i+1 - u_i)/h = 0) b'ary conditions (zero shear stress at b'ary)
+    applyBoundaryConditions() {
+        for (let i = 0; i < this.nx; i++) {
+            this.u[this.idx(i, 0)] = this.u[this.idx(i, 1)]; // bottom b'ary
+            this.u[this.idx(i, this.ny - 1)] = this.u[this.idx(i, this.ny - 2)]; // top b'ary
+        }
+        for (let j = 0; j < this.ny; j++) {
+            this.v[this.idx(0, j)] = this.v[this.idx(1, j)]; // left b'ary
+            this.v[this.idx(this.nx - 1, j)] = this.v[this.idx(this.nx - 2, j)]; // right b'ary
         }
     }
 }
