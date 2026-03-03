@@ -6,9 +6,13 @@ const config = {
 		adapter: adapter({
 			pages: 'docs',
 			assets: 'docs',
+			fallback: '404.html',
+			precompress: false,
+			strict: true,
 		}),
 		paths: {
 			base: `/eulerian-fluid-sim`,
+			relative: true,
 		},
 	}
 };
